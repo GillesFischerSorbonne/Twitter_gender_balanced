@@ -1,0 +1,173 @@
+---
+title: "Twitter: Gender Balance in PhD jury"
+author: "Gilles Fischer"
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  html_document:
+    code_folding: hide
+    fig_caption: yes
+    highlight: zenburn
+    number_sections: no
+    self_contained: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  powerpoint_presentation:
+    slide_level: 2
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: Answers to a tweet posted on 2020-08-26
+font-family: Oswald
+transition: linear
+editor_options: 
+  chunk_output_type: inline
+---
+```{r chunk_options}
+
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 7, fig.height = 5, 
+  fig.path = 'figures/',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, 
+  eval = TRUE, 
+  warning = FALSE,
+  message = FALSE, 
+  results = TRUE,
+  comment = "")
+
+
+options(scipen = 3) ## Max number of digits for non-scientific notation
+```
+
+```{r libraries}
+
+requiredLib <- c(
+  "knitr",
+  "readxl",
+  "dplyr",
+  "ggplot2",
+  "hrbrthemes")
+for (lib in requiredLib) {
+  if (!require(lib, character.only = TRUE)) {
+    install.packages(lib, )
+  }
+  require(lib, character.only = TRUE)
+}
+
+
+
+```
+
+# Original tweet
+
+@G__Fischer
+
+Country  
+Year of PhD defense  
+Gender  
+Number of women/men in your jury  
+
+
+# Dataset
+
+The answers were manually recorded with the kind help of @Zhou_Xu_ into an excel file `PhD_twitter_stat.xlsx`.
+
+```{r load_data}
+
+raw.data <- read_excel("~/Documents/Twitter_gender_balanced/PhD_twitter_stat.xlsx")
+kable(head(raw.data, n = 5), caption = "First 5 lines of the excel file")
+
+# clean manual record errors
+raw.data$gender[raw.data$gender=="W"] <- "F"
+raw.data$gender[raw.data$gender=="H"] <- "M"
+raw.data$country[raw.data$country=="france"] <- "France"
+
+# count by country and gender
+country.gender <- raw.data %>% count(country, gender)
+
+# prop female in jury per year
+raw.data$prop.w <- 100 * raw.data$women/(raw.data$women + raw.data$men)
+prop.year.w <- aggregate(raw.data$prop.w, by = list(raw.data$year), FUN = mean)
+
+# prop female in jury per year and per candidate gender
+prop.year.w.F <- aggregate(raw.data$prop.w[raw.data$gender=="F"], by = list(raw.data$year[raw.data$gender=="F"]), FUN = mean)
+prop.year.w.F$gender <- "F"
+colnames(prop.year.w.F) <- c("year", "prop.w", "gender")
+
+prop.year.w.M <- aggregate(raw.data$prop.w[raw.data$gender=="M"], by = list(raw.data$year[raw.data$gender=="M"]), FUN = mean)
+prop.year.w.M$gender <- "M"
+colnames(prop.year.w.M) <- c("year", "prop.w", "gender")
+
+prop.year.w.gender <- rbind(prop.year.w.F, prop.year.w.M)
+
+# subset raw.data for countries with more than 30 answers
+t.country <- table(raw.data$country)
+
+raw.data.country <- subset(raw.data, country %in% names(t.country[t.country > 50]))
+
+prop.year.w.country <- aggregate(raw.data.country$prop.w, by = list(raw.data.country$year, raw.data.country$country), FUN = mean)
+colnames(prop.year.w.country) <- c("year", "country", "prop.w")
+
+# total number of jury members
+raw.data$members <- raw.data$women + raw.data$men
+
+
+```
+
+**- The total number of recorded participants was `r nrow(raw.data)` and included `r sum(raw.data$gender == "F")` women, `r sum(raw.data$gender == "M")` men and `r sum(raw.data$gender == "Non_binary")` non-binary persons.**  
+**- The answers came from `r length(unique(raw.data$country))` different countries.**  
+**- PhD were defended between `r min(raw.data$year)` and 2020.**  
+**- The total number of members per jury ranged from `r min(raw.data$members)` to `r max(raw.data$members)`.**  
+
+# Plots
+
+```{r plots}
+# stacked barplot by country and gender
+ggplot(country.gender, aes(fill=gender, y=n, x=country)) + 
+    geom_bar(position="stack", stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle("Country and gender of participants") +
+  ylab("Number of participants") +
+  xlab("Country")
+
+# hist year
+ggplot(raw.data, aes(x=year)) + 
+  geom_histogram(binwidth=3, fill="#69b3a2", color="#e9ecef", alpha=0.9) +
+  ggtitle("Year of PhD defense") +
+  ylab("Number of participants") +
+  xlab("Year")
+
+# percentage women in jury  
+ggplot(prop.year.w, aes(x=Group.1, y=x)) +
+  geom_point() +
+  ggtitle("Percentage of women in PhD juries") +
+  ylab("Percentage of women") +
+  xlab("Year")
+
+# percentage women in jury depending on candidate gender
+ggplot(prop.year.w.gender, aes(x=year, y=prop.w, color=gender)) + 
+  geom_point(size=2) +
+  ggtitle("Percentage of women in PhD juries depending on the candidate gender") +
+  ylab("Percentage of women") +
+  xlab("Year")
+
+# percentage of wommen in jury by country (n>50)
+  ggplot(prop.year.w.country, aes(x=year, y=prop.w, color=country)) +
+    geom_line() +
+    ggtitle("Percentage of women in PhD juries depending on country") +
+  ylab("Percentage of women") +
+  xlab("Year")
+
+```
+
