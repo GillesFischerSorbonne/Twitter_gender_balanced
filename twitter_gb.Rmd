@@ -79,9 +79,11 @@ Gender
 Number of women/men in your jury  
 
 
+This tweet recorded more than 2k answers on 2020-08-29
+
 # Dataset
 
-The answers were manually recorded with the kind help of @Zhou_Xu_ into an excel file `PhD_twitter_stat.xlsx`.
+Answers were manually recorded with the kind help of @Zhou_Xu_ into an excel file `PhD_twitter_stat.xlsx`.
 
 ```{r load_data}
 
