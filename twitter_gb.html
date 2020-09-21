@@ -11,7 +11,7 @@
 
 <meta name="author" content="Gilles Fischer" />
 
-<meta name="date" content="2020-08-29" />
+<meta name="date" content="2020-09-21" />
 
 <title>Twitter: Gender Balance in PhD jury</title>
 
@@ -354,7 +354,7 @@ div.tocify {
 <h1 class="title toc-ignore">Twitter: Gender Balance in PhD jury</h1>
 <h3 class="subtitle">Answers to a tweet posted on 2020-08-26</h3>
 <h4 class="author">Gilles Fischer</h4>
-<h4 class="date">2020-08-29</h4>
+<h4 class="date">2020-09-21</h4>
 
 </div>
 
@@ -460,28 +460,32 @@ Number of women/men in your jury</p>
 <span id="cb4-9"><a href="#cb4-9"></a><span class="co"># prop female in jury per year</span></span>
 <span id="cb4-10"><a href="#cb4-10"></a>raw.data<span class="op">$</span>prop.w &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span>raw.data<span class="op">$</span>women<span class="op">/</span>(raw.data<span class="op">$</span>women <span class="op">+</span><span class="st"> </span>raw.data<span class="op">$</span>men)</span>
 <span id="cb4-11"><a href="#cb4-11"></a>prop.year.w &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w, <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year), <span class="dt">FUN =</span> mean)</span>
-<span id="cb4-12"><a href="#cb4-12"></a></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co"># prop female in jury per year and per candidate gender</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a>prop.year.w.F &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;F&quot;</span>], <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;F&quot;</span>]), <span class="dt">FUN =</span> mean)</span>
-<span id="cb4-15"><a href="#cb4-15"></a>prop.year.w.F<span class="op">$</span>gender &lt;-<span class="st"> &quot;F&quot;</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="kw">colnames</span>(prop.year.w.F) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;prop.w&quot;</span>, <span class="st">&quot;gender&quot;</span>)</span>
-<span id="cb4-17"><a href="#cb4-17"></a></span>
-<span id="cb4-18"><a href="#cb4-18"></a>prop.year.w.M &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;M&quot;</span>], <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;M&quot;</span>]), <span class="dt">FUN =</span> mean)</span>
-<span id="cb4-19"><a href="#cb4-19"></a>prop.year.w.M<span class="op">$</span>gender &lt;-<span class="st"> &quot;M&quot;</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="kw">colnames</span>(prop.year.w.M) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;prop.w&quot;</span>, <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb4-12"><a href="#cb4-12"></a>prop.year.w.sd &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w, <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year), <span class="dt">FUN =</span> sd)</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="kw">names</span>(prop.year.w.sd)[<span class="dv">2</span>] &lt;-<span class="st">&quot;sd&quot;</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>prop.year.w.mean.sd &lt;-<span class="st"> </span><span class="kw">cbind</span>(prop.year.w, prop.year.w.sd)</span>
+<span id="cb4-15"><a href="#cb4-15"></a>prop.year.w.mean.sd &lt;-<span class="st"> </span>prop.year.w.mean.sd[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>) ]</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co"># prop female in jury per year and per candidate gender</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>prop.year.w.F &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;F&quot;</span>], <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;F&quot;</span>]), <span class="dt">FUN =</span> mean)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>prop.year.w.F<span class="op">$</span>gender &lt;-<span class="st"> &quot;F&quot;</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="kw">colnames</span>(prop.year.w.F) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;prop.w&quot;</span>, <span class="st">&quot;gender&quot;</span>)</span>
 <span id="cb4-21"><a href="#cb4-21"></a></span>
-<span id="cb4-22"><a href="#cb4-22"></a>prop.year.w.gender &lt;-<span class="st"> </span><span class="kw">rbind</span>(prop.year.w.F, prop.year.w.M)</span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="co"># subset raw.data for countries with more than 30 answers</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a>t.country &lt;-<span class="st"> </span><span class="kw">table</span>(raw.data<span class="op">$</span>country)</span>
-<span id="cb4-26"><a href="#cb4-26"></a></span>
-<span id="cb4-27"><a href="#cb4-27"></a>raw.data.country &lt;-<span class="st"> </span><span class="kw">subset</span>(raw.data, country <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(t.country[t.country <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>]))</span>
-<span id="cb4-28"><a href="#cb4-28"></a></span>
-<span id="cb4-29"><a href="#cb4-29"></a>prop.year.w.country &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data.country<span class="op">$</span>prop.w, <span class="dt">by =</span> <span class="kw">list</span>(raw.data.country<span class="op">$</span>year, raw.data.country<span class="op">$</span>country), <span class="dt">FUN =</span> mean)</span>
-<span id="cb4-30"><a href="#cb4-30"></a><span class="kw">colnames</span>(prop.year.w.country) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;country&quot;</span>, <span class="st">&quot;prop.w&quot;</span>)</span>
-<span id="cb4-31"><a href="#cb4-31"></a></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># total number of jury members</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a>raw.data<span class="op">$</span>members &lt;-<span class="st"> </span>raw.data<span class="op">$</span>women <span class="op">+</span><span class="st"> </span>raw.data<span class="op">$</span>men</span></code></pre></div>
+<span id="cb4-22"><a href="#cb4-22"></a>prop.year.w.M &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data<span class="op">$</span>prop.w[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;M&quot;</span>], <span class="dt">by =</span> <span class="kw">list</span>(raw.data<span class="op">$</span>year[raw.data<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;M&quot;</span>]), <span class="dt">FUN =</span> mean)</span>
+<span id="cb4-23"><a href="#cb4-23"></a>prop.year.w.M<span class="op">$</span>gender &lt;-<span class="st"> &quot;M&quot;</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="kw">colnames</span>(prop.year.w.M) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;prop.w&quot;</span>, <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb4-25"><a href="#cb4-25"></a></span>
+<span id="cb4-26"><a href="#cb4-26"></a>prop.year.w.gender &lt;-<span class="st"> </span><span class="kw">rbind</span>(prop.year.w.F, prop.year.w.M)</span>
+<span id="cb4-27"><a href="#cb4-27"></a></span>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="co"># subset raw.data for countries with more than 30 answers</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a>t.country &lt;-<span class="st"> </span><span class="kw">table</span>(raw.data<span class="op">$</span>country)</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a>raw.data.country &lt;-<span class="st"> </span><span class="kw">subset</span>(raw.data, country <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(t.country[t.country <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>]))</span>
+<span id="cb4-32"><a href="#cb4-32"></a></span>
+<span id="cb4-33"><a href="#cb4-33"></a>prop.year.w.country &lt;-<span class="st"> </span><span class="kw">aggregate</span>(raw.data.country<span class="op">$</span>prop.w, <span class="dt">by =</span> <span class="kw">list</span>(raw.data.country<span class="op">$</span>year, raw.data.country<span class="op">$</span>country), <span class="dt">FUN =</span> mean)</span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="kw">colnames</span>(prop.year.w.country) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;country&quot;</span>, <span class="st">&quot;prop.w&quot;</span>)</span>
+<span id="cb4-35"><a href="#cb4-35"></a></span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="co"># total number of jury members</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a>raw.data<span class="op">$</span>members &lt;-<span class="st"> </span>raw.data<span class="op">$</span>women <span class="op">+</span><span class="st"> </span>raw.data<span class="op">$</span>men</span></code></pre></div>
 <p><strong>- The total number of recorded participants was 1083 and included 559 women, 521 men and 3 non-binary persons.</strong><br />
 <strong>- The answers came from 40 different countries.</strong><br />
 <strong>- PhD were defended between 1974 and 2020.</strong><br />
@@ -511,20 +515,29 @@ Number of women/men in your jury</p>
 <span id="cb7-5"><a href="#cb7-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Percentage of women&quot;</span>) <span class="op">+</span></span>
 <span id="cb7-6"><a href="#cb7-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
 <p><img src="figures/plots-3.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># percentage women in jury depending on candidate gender</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">ggplot</span>(prop.year.w.gender, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>prop.w, <span class="dt">color=</span>gender)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">2</span>) <span class="op">+</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Percentage of women in PhD juries depending on the candidate gender&quot;</span>) <span class="op">+</span></span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># percentage women in jury with sd error bars</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">ggplot</span>(prop.year.w.mean.sd, <span class="kw">aes</span>(<span class="dt">x=</span>Group<span class="fl">.1</span>, <span class="dt">y=</span>x)) <span class="op">+</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Percentage of women in PhD juries&quot;</span>) <span class="op">+</span></span>
 <span id="cb8-5"><a href="#cb8-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Percentage of women&quot;</span>) <span class="op">+</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>) <span class="op">+</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin=</span>x<span class="op">-</span>sd, <span class="dt">ymax=</span>x<span class="op">+</span>sd), <span class="dt">width=</span>.<span class="dv">2</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>                 <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.05</span>))</span></code></pre></div>
 <p><img src="figures/plots-4.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># percentage of wommen in jury by country (n&gt;50)</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="kw">ggplot</span>(prop.year.w.country, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>prop.w, <span class="dt">color=</span>country)) <span class="op">+</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Percentage of women in PhD juries depending on country&quot;</span>) <span class="op">+</span></span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># percentage women in jury depending on candidate gender</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">ggplot</span>(prop.year.w.gender, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>prop.w, <span class="dt">color=</span>gender)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Percentage of women in PhD juries depending on the candidate gender&quot;</span>) <span class="op">+</span></span>
 <span id="cb9-5"><a href="#cb9-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Percentage of women&quot;</span>) <span class="op">+</span></span>
 <span id="cb9-6"><a href="#cb9-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
 <p><img src="figures/plots-5.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># percentage of wommen in jury by country (n&gt;50)</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="kw">ggplot</span>(prop.year.w.country, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>prop.w, <span class="dt">color=</span>country)) <span class="op">+</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Percentage of women in PhD juries depending on country&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Percentage of women&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
+<p><img src="figures/plots-6.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 
 

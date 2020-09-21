@@ -101,6 +101,10 @@ country.gender <- raw.data %>% count(country, gender)
 # prop female in jury per year
 raw.data$prop.w <- 100 * raw.data$women/(raw.data$women + raw.data$men)
 prop.year.w <- aggregate(raw.data$prop.w, by = list(raw.data$year), FUN = mean)
+prop.year.w.sd <- aggregate(raw.data$prop.w, by = list(raw.data$year), FUN = sd)
+names(prop.year.w.sd)[2] <-"sd"
+prop.year.w.mean.sd <- cbind(prop.year.w, prop.year.w.sd)
+prop.year.w.mean.sd <- prop.year.w.mean.sd[c(1,2,4) ]
 
 # prop female in jury per year and per candidate gender
 prop.year.w.F <- aggregate(raw.data$prop.w[raw.data$gender=="F"], by = list(raw.data$year[raw.data$gender=="F"]), FUN = mean)
@@ -156,6 +160,16 @@ ggplot(prop.year.w, aes(x=Group.1, y=x)) +
   ggtitle("Percentage of women in PhD juries") +
   ylab("Percentage of women") +
   xlab("Year")
+
+
+# percentage women in jury with sd error bars
+ggplot(prop.year.w.mean.sd, aes(x=Group.1, y=x)) +
+  geom_point() +
+  ggtitle("Percentage of women in PhD juries") +
+  ylab("Percentage of women") +
+  xlab("Year") +
+  geom_errorbar(aes(ymin=x-sd, ymax=x+sd), width=.2,
+                 position=position_dodge(0.05))
 
 # percentage women in jury depending on candidate gender
 ggplot(prop.year.w.gender, aes(x=year, y=prop.w, color=gender)) + 
